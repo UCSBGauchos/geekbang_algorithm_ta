@@ -21,5 +21,21 @@ class Solution {
 4. 三数之和
 https://leetcode-cn.com/problems/3sum/solution/san-shu-zhi-he-by-leetcode-solution/
 这边需要两个操作，排序O(nlogn)+二重循环的O(n^2)，所以总的时间复杂度是O(n^2)。其中二重循环使用了先确定一个元素，然后二重指针夹逼的方式
-5. 
+5. 加一
+O（n）的复杂度，每次只有两种情况，9+1进位和非进位
+最后如果是999之类的情况，需要将原数组长度加一
+class Solution {
+    public int[] plusOne(int[] digits) {
+        int len = digits.length;
+        for(int i = len - 1; i >= 0; i--) {
+            digits[i]++;
+            digits[i] %= 10;
+            if(digits[i]!=0)
+                return digits;
+        }
+        digits = new int[len + 1];
+        digits[0] = 1;
+        return digits;
+    }
+}
 
