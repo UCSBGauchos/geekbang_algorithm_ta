@@ -1,6 +1,8 @@
 ### easy
 1. 用 add first 或 add last 这套新的 API 改写 Deque 的代码
+略
 2. 分析 Queue 和 Priority Queue 的源码
+略
 3. 删除排序数组中的重复项（Facebook、字节跳动、微软在半年内面试中考过）
 快慢指针，满指针i只用来指向不重复的元素，快指针用来遍历数组，只有在j的位置的元素不等于i时，才需要更新i
 class Solution {
@@ -16,3 +18,8 @@ class Solution {
     return i + 1;
     }
 }
+4. 三数之和
+https://leetcode-cn.com/problems/3sum/solution/san-shu-zhi-he-by-leetcode-solution/
+这边需要两个操作，排序O(nlogn)+二重循环的O(n^2)，所以总的时间复杂度是O(n^2)。其中二重循环使用了先确定一个元素，然后二重指针夹逼的方式
+5. 
+
