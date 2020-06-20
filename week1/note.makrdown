@@ -64,3 +64,25 @@ class Solution {
     }
 }
 
+移动0
+之所以把这道题目拿出来讲解，是因为真的非常典型，和数组操作中的常见的两边加逼法齐名的双指针法，这边同样是维护两个指针i和j
+其中指针i用来正常遍历数组，这是一个比较常见的套路，而另一个指针j，则仅仅用来记录左边非0的位置
+我们从左到右遍历数组，一旦i的位置非0，则交换i和j的位置，确保j的位置一定非0，这样就可以把所有非0的都交换到数组的最左侧
+代码其实非常简单，重要的是要理解两个指针的思想
+class Solution {
+ public void moveZeroes(int[] nums) {
+  if(nums==null) {
+   return;
+  }
+  //两个指针i和j
+  int j = 0;
+  for(int i=0;i<nums.length;i++) {
+   //当前元素!=0，就把其交换到左边，等于0的交换到右边
+   if(nums[i]!=0) {
+    int tmp = nums[i];
+    nums[i] = nums[j];
+    nums[j++] = tmp;
+   }
+  }
+ }
+}
