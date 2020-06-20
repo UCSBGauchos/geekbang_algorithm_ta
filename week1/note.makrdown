@@ -3,7 +3,8 @@
 略
 2. 分析 Queue 和 Priority Queue 的源码
 略
-3. 删除排序数组中的重复项（Facebook、字节跳动、微软在半年内面试中考过）
+
+删除排序数组中的重复项（Facebook、字节跳动、微软在半年内面试中考过）
 快慢指针，满指针i只用来指向不重复的元素，快指针用来遍历数组，只有在j的位置的元素不等于i时，才需要更新i
 class Solution {
     public int removeDuplicates(int[] nums) {
@@ -18,7 +19,8 @@ class Solution {
     return i + 1;
     }
 }
-4. 三数之和
+
+三数之和
 https://leetcode-cn.com/problems/3sum/solution/san-shu-zhi-he-by-leetcode-solution/
 这边需要两个操作，排序O(nlogn)+二重循环的O(n^2)，所以总的时间复杂度是O(n^2)。其中二重循环使用了先确定一个元素，然后二重指针夹逼的方式
 5. 加一
@@ -36,6 +38,29 @@ class Solution {
         digits = new int[len + 1];
         digits[0] = 1;
         return digits;
+    }
+}
+
+爬楼梯
+Week#1 典型题目讲解 1
+爬楼梯：
+这道题目普通的递归类似斐波那契数列的方法就不讲了，这边给大家讲一个使用动态规划的方式求解，就当给后面的课程预习了
+第一步：首先动态规划需要确定一个递推公式或者叫状态转移方程，这里的递推公式为：
+dp[n] = dp[n-1] + dp[n-2]
+即第n个台阶的解决方案是由n-1和n-2这两个解决方案的总和，
+第二步：确认dp0和dp1的初始边界的解决方案，分别是上了第0台阶和第1台阶，这边其实都只有1种方案，
+所以整个动态规划的代码其实非常简单：
+class Solution {
+    public int climbStairs(int n) {
+        int[] dp = new int[n + 1];
+       // 确认初始解决方案
+        dp[0] = 1;
+        dp[1] = 1; 
+        for(int i = 2; i <= n; i++) {
+           // 确认解决方案的递推公式或者状态转移方程
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
     }
 }
 
