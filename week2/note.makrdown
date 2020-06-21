@@ -20,3 +20,35 @@ v3, v2, v1，这样弹栈时就是先弹出v1, 进行处理，然后再把v1的�
 
 字母异位词分组
 这里的核心思想是维护一个hashmap，其中key是同一分组相关字符串排序后的结果，然后将真实的字符串作为value存入改key桶中
+
+N 叉树的层序遍历
+借着这道题目，来聊一下广度优先遍历的方式
+class Solution {
+
+    public List<List<Integer>> levelOrder(Node root) { 
+        // 结果集，用来存放不同的level的串
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) return result;
+        // queue，用来辅助运作整个广度优先遍历
+        Queue<Node> queue = new LinkedList<>();
+        //首先先把root放入到queue中，启动广度优先遍历
+        queue.add(root);
+        // 广度优先的常规套路，queue只要不为空就一直可以往下运作
+        while (!queue.isEmpty()) {
+            List<Integer> level = new ArrayList<>();
+            // 这一步是核心，广度优先遍历，需要把当前queue中的所有节点拿出来，对每一个拿出来的节点，将它放到level中去。
+            // 同时将它下面的所有子节点，放入到queue中待处理
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                Node node = queue.poll();
+                level.add(node.val);
+                queue.addAll(node.children);
+            }
+            当前层处理完了，将level的快照存入result中
+            result.add(level);
+        }
+        return result;
+    }
+}
+
+
