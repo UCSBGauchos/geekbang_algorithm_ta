@@ -44,11 +44,39 @@ class Solution {
                 level.add(node.val);
                 queue.addAll(node.children);
             }
-            当前层处理完了，将level的快照存入result中
+            //当前层处理完了，将level的快照存入result中
             result.add(level);
         }
         return result;
     }
 }
+
+丑数
+这道题所实话挺难的，其中最优的解法我感觉应该是动态规划，由于动态规划课程中还没有讲到，这边先给大家预习一下。
+我觉得动态规划最核心的点是要确定初始条件以及状态转移方程，
+这道题基于丑数的概念，可以知道丑数的状态转移方程是
+第n+1个丑数=第n个丑数乘上2,3或者5。
+题目的要求是求第n个最小的丑数，所以第n+1个丑数应该是最接近n的丑数
+下面结合代码来分析
+class Solution {
+    public int nthUglyNumber(int n) {
+        //三指针法，确定初始条件都是0
+        int a = 0, b = 0, c = 0;
+        int[] dp = new int[n];
+        // 第一个丑数从数学定理上来说是1
+        dp[0] = 1;
+        for(int i = 1; i < n; i++) {
+            int n2 = dp[a] * 2, n3 = dp[b] * 3, n5 = dp[c] * 5;
+            // 动态规划状态转移方程
+            // 描述一下：一开始2,3,5中，取最接近1的为2，作为下一个丑数，放入结果集dp中
+            dp[i] = Math.min(Math.min(n2, n3), n5);
+            if(dp[i] == n2) a++;
+            if(dp[i] == n3) b++;
+            if(dp[i] == n5) c++;
+        }
+        return dp[n - 1];
+    }
+}
+// 这边有一个比较妙的点是三指针每个位置都只X自己的因子，其实我觉得傻一点每个位置确认后，都把2,3,5全部X一遍，取最小值，也是OK的，这样可能比较好理解。大家可以想一下为啥每个指针只X自己的因子，也可以保证不漏掉。
 
 
