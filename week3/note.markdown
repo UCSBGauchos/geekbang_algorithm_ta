@@ -64,3 +64,33 @@ class Solution {
         return myBuildTree(preorder, inorder, 0, n - 1, 0, n - 1);
     }
 }
+
+### 组合
+从1-n个数中，选出k个数，输出所有可能性
+class Solution {
+  List<List<Integer>> output = new LinkedList();
+  int n;
+  int k;
+
+  public void backtrack(int first, LinkedList<Integer> curr) {
+    // 还是老套路，递归的终止条件，发现curr里面的尝试长度=k了，就是一个合法组合，放入到output里面去，output是结果集合
+    if (curr.size() == k)
+      output.add(new LinkedList(curr));
+
+    // 当前层的尝试，由于这里的可能性比较多，所以尝试需要for循环，其实也并没有什么特殊的
+    for (int i = first; i < n + 1; ++i) {
+      curr.add(i);
+      // drill down到下一层尝试
+      backtrack(i + 1, curr);
+      // reverse，清理现场，这个尝试过了，试试下一个
+      curr.removeLast();
+    }
+  }
+
+  public List<List<Integer>> combine(int n, int k) {
+    this.n = n;
+    this.k = k;
+    backtrack(1, new LinkedList<Integer>());
+    return output;
+  }
+}
