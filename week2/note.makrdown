@@ -5,3 +5,78 @@
 空间复杂度是n的hash表以及k的堆，所以空间复杂度是n
 所以你的答案基本上是正确的。
 *** 这里需要注意的点是，要使用小顶堆维护k个元素，这样移除堆顶元素才是正确的。使用大顶堆，堆顶是最大元素，不管新来的元素是小于还是大于堆顶元素，都没有办法移除堆顶元素
+
+N叉树的遍历
+这里使用迭代+stack的方式进行遍历
+举个例子
+root
+子节点是
+v1 v2 v3
+其中v1的子节点是
+v4
+这里要完成整个前序遍历，期望的输出的list为root, v1, v2, v3，
+这里使用stack模拟的话，需要确保每个节点的孩子节点是倒序放入stack的，举个例子，root先放到stack之后，将它的孩子节点倒序放入stack中
+v3, v2, v1，这样弹栈时就是先弹出v1, 进行处理，然后再把v1的孩子孩子节点倒序存入stack，老的DFS的状态使用stack来保存维护了
+
+字母异位词分组
+这里的核心思想是维护一个hashmap，其中key是同一分组相关字符串排序后的结果，然后将真实的字符串作为value存入改key桶中
+
+N 叉树的层序遍历
+借着这道题目，来聊一下广度优先遍历的方式
+class Solution {
+
+    public List<List<Integer>> levelOrder(Node root) { 
+        // 结果集，用来存放不同的level的串
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) return result;
+        // queue，用来辅助运作整个广度优先遍历
+        Queue<Node> queue = new LinkedList<>();
+        //首先先把root放入到queue中，启动广度优先遍历
+        queue.add(root);
+        // 广度优先的常规套路，queue只要不为空就一直可以往下运作
+        while (!queue.isEmpty()) {
+            List<Integer> level = new ArrayList<>();
+            // 这一步是核心，广度优先遍历，需要把当前queue中的所有节点拿出来，对每一个拿出来的节点，将它放到level中去。
+            // 同时将它下面的所有子节点，放入到queue中待处理
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                Node node = queue.poll();
+                level.add(node.val);
+                queue.addAll(node.children);
+            }
+            //当前层处理完了，将level的快照存入result中
+            result.add(level);
+        }
+        return result;
+    }
+}
+
+丑数
+这道题所实话挺难的，其中最优的解法我感觉应该是动态规划，由于动态规划课程中还没有讲到，这边先给大家预习一下。
+我觉得动态规划最核心的点是要确定初始条件以及状态转移方程，
+这道题基于丑数的概念，可以知道丑数的状态转移方程是
+第n+1个丑数=第n个丑数乘上2,3或者5。
+题目的要求是求第n个最小的丑数，所以第n+1个丑数应该是最接近n的丑数
+下面结合代码来分析
+class Solution {
+    public int nthUglyNumber(int n) {
+        //三指针法，确定初始条件都是0
+        int a = 0, b = 0, c = 0;
+        int[] dp = new int[n];
+        // 第一个丑数从数学定理上来说是1
+        dp[0] = 1;
+        for(int i = 1; i < n; i++) {
+            int n2 = dp[a] * 2, n3 = dp[b] * 3, n5 = dp[c] * 5;
+            // 动态规划状态转移方程
+            // 描述一下：一开始2,3,5中，取最接近1的为2，作为下一个丑数，放入结果集dp中
+            dp[i] = Math.min(Math.min(n2, n3), n5);
+            if(dp[i] == n2) a++;
+            if(dp[i] == n3) b++;
+            if(dp[i] == n5) c++;
+        }
+        return dp[n - 1];
+    }
+}
+// 这边有一个比较妙的点是三指针每个位置都只X自己的因子，其实我觉得傻一点每个位置确认后，都把2,3,5全部X一遍，取最小值，也是OK的，这样可能比较好理解。大家可以想一下为啥每个指针只X自己的因子，也可以保证不漏掉。
+
+
