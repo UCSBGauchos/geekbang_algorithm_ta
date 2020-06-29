@@ -83,6 +83,7 @@ class Solution {
       // drill down到下一层尝试
       backtrack(i + 1, curr);
       // reverse，清理现场，这个尝试过了，试试下一个
+      // 这个rerverse是回溯法的精髓
       curr.removeLast();
     }
   }
@@ -93,4 +94,95 @@ class Solution {
     backtrack(1, new LinkedList<Integer>());
     return output;
   }
+}
+// 这道题目是一个典型的回溯法，所谓回溯法，一种通过探索所有可能的候选解来找出所有的解的算法。如果候选解被确认不是一个解的话（或者至少不是最后一个解），回溯算法会通过在上一步进行一些变化抛弃该解，即回溯并且再次尝试。
+
+### 全排列
+同样也是一道比较经典的回溯法的题目，直接来看代码
+class Solution {
+  public void backtrack(int n,
+                        ArrayList<Integer> output,
+                        List<List<Integer>> res,
+                        int first) {
+    // 还是这个套路，终止条件是当尝试队列长度=n的时候，就将这个结果放到res中
+    if (first == n)
+      res.add(new ArrayList<Integer>(output));
+    for (int i = first; i < n; i++) {
+      // 如果选取了，就交换
+      Collections.swap(output, first, i);
+      // 继续递归填下一个数
+      backtrack(n, output, res, first + 1);
+      // 不选取，撤销操作
+      Collections.swap(output, first, i);
+    }
+  }
+  
+  public List<List<Integer>> permute(int[] nums) {
+    //存放所有可能
+    List<List<Integer>> res = new LinkedList();
+    ArrayList<Integer> output = new ArrayList<Integer>();
+    for (int num : nums)
+      output.add(num);
+    int n = nums.length;
+    backtrack(n, output, res, 0);
+    return res;
+  }
+}
+
+### 全排列 2
+这道题目拿出来分析的原因是因为这道题目有很经典的剪枝部分
+这类题目的重点就在一，一定要明白哪里可以剪枝
+public class Solution {
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        int len = nums.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if (len == 0) {
+            return res;
+        }
+
+        // 排序（升序或者降序都可以），排序是剪枝的前提
+        Arrays.sort(nums);
+
+        boolean[] used = new boolean[len];
+        // 使用 Deque 是 Java 官方 Stack 类的建议
+        Deque<Integer> path = new ArrayDeque<>(len);
+        dfs(nums, len, 0, used, path, res);
+        return res;
+    }
+
+    private void dfs(int[] nums, int len, int depth, boolean[] used, Deque<Integer> path, List<List<Integer>> res) {
+        if (depth == len) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+
+        for (int i = 0; i < len; ++i) {
+            if (used[i]) {
+                continue;
+            }
+
+            // 剪枝条件：i > 0 是为了保证 nums[i - 1] 有意义
+            // 写 !used[i - 1] 是因为 nums[i - 1] 在深度优先遍历的过程中刚刚被撤销选择
+            // 举个例子，1和1撇，之前11撇的组合已经选过，现在1撇先进来，1又进来了，同层的，直接剪掉
+            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
+                continue;
+            }
+
+            path.addLast(nums[i]);
+            used[i] = true;
+
+            dfs(nums, len, depth + 1, used, path, res);
+            // 回溯部分的代码，和 dfs 之前的代码是对称的
+            used[i] = false;
+            path.removeLast();
+        }
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] nums = {1, 1, 2};
+        List<List<Integer>> res = solution.permuteUnique(nums);
+        System.out.println(res);
+    }
 }
